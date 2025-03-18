@@ -80,16 +80,14 @@ export default function Leaderboard() {
           <div
             key={team.id}
             className={`mb-2 rounded border ${
-              index === 0 ? 'border-yellow-400' : 'border-gray-200'
+              index === 0 ? 'border-indigo-400' : 'border-gray-200'
             }`}
           >
-            <div className={`p-2 ${index === 0 ? 'bg-yellow-50' : 'bg-white'}`}>
+            <div className={`p-2 ${index === 0 ? 'bg-indigo-50' : 'bg-white'}`}>
               <div className="flex items-center">
                 {/* Rank */}
                 <div className={`flex-none w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${
-                  index === 0 ? 'bg-yellow-400 text-yellow-800' : 
-                  index === 1 ? 'bg-gray-300 text-gray-700' : 
-                  index === 2 ? 'bg-amber-600 text-amber-100' : 
+                  index === 0 ? 'bg-indigo-400 text-white' :  
                   'bg-indigo-100 text-indigo-600'
                 }`}>
                   {index + 1}
@@ -161,9 +159,9 @@ export default function Leaderboard() {
               <div className="mt-1 w-full h-1 bg-gray-100 rounded-full overflow-hidden">
                 <div 
                   className={`h-full ${
-                    team.spendPercentage > 90 ? 'bg-red-500' : 
-                    team.spendPercentage > 70 ? 'bg-orange-500' : 
-                    'bg-green-500'
+                    team.spendPercentage > 90 ? 'bg-indigo-500' : 
+                    team.spendPercentage > 70 ? 'bg-indigo-500' : 
+                    'bg-indigo-500'
                   }`} 
                   style={{ width: `${team.spendPercentage}%` }}
                 />
