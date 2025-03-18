@@ -25,14 +25,81 @@ export default function Players() {
     }
   };
 
+  // Filter players based on search and filter criteria
   const filteredPlayers = players.filter(player => {
     const matchesSearch = player.name.toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === 'all' || player.type === filter;
     return matchesSearch && matchesFilter;
   });
 
+  // Organize players by type and status (unsold/sold)
+  const organizePlayers = () => {
+    // Group by player type and status
+    const bowlersUnsold = filteredPlayers.filter(player => player.type === 'Bowler' && player.status === 'unsold');
+    const bowlersSold = filteredPlayers.filter(player => player.type === 'Bowler' && player.status === 'sold');
+    
+    const batsmenUnsold = filteredPlayers.filter(player => player.type === 'Batsman' && player.status === 'unsold');
+    const batsmenSold = filteredPlayers.filter(player => player.type === 'Batsman' && player.status === 'sold');
+    
+    const allRoundersUnsold = filteredPlayers.filter(player => player.type === 'All-rounder' && player.status === 'unsold');
+    const allRoundersSold = filteredPlayers.filter(player => player.type === 'All-rounder' && player.status === 'sold');
+
+    return { 
+      bowlersUnsold, bowlersSold, 
+      batsmenUnsold, batsmenSold, 
+      allRoundersUnsold, allRoundersSold 
+    };
+  };
+
+  const { 
+    bowlersUnsold, bowlersSold, 
+    batsmenUnsold, batsmenSold, 
+    allRoundersUnsold, allRoundersSold 
+  } = organizePlayers();
+
+  // Player card component for reuse
+  const PlayerCard = ({ player }) => (
+    <div className="p-4 rounded-lg border bg-white">
+      <div className="flex justify-between items-start">
+        <div>
+          <h3 className="font-semibold text-lg">{player.name}</h3>
+          <p className="text-sm text-gray-600">{player.type}</p>
+          <p className="text-sm text-gray-600">Base Price: ₹{player.basePrice.toLocaleString()}</p>
+          <p className="text-sm text-gray-600">Rating: {player.rating}/10</p>
+        </div>
+        <div>
+          <span className={`px-2 py-1 text-xs rounded-full ${
+            player.status === 'unsold' 
+              ? 'bg-gray-100 text-gray-800' 
+              : 'bg-green-100 text-green-800'
+          }`}>
+            {player.status}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Section component for grouping players by type
+  const PlayerTypeSection = ({ title, players }) => (
+    <div className="mt-4">
+      <h4 className="text-md font-medium mb-2">
+        {title} ({players.length})
+      </h4>
+      <div className="space-y-4">
+        {players.map(player => (
+          <PlayerCard key={player.id} player={player} />
+        ))}
+        {players.length === 0 && (
+          <p className="text-gray-500 text-sm italic">No players in this category</p>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
+      {/* Add New Player Form */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4">Add New Player</h2>
         <form onSubmit={handleSubmit} className="flex gap-4">
@@ -76,6 +143,7 @@ export default function Players() {
         </form>
       </div>
 
+      {/* Search and Filter */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex gap-4 mb-6">
           <div className="flex-1 relative">
@@ -100,27 +168,52 @@ export default function Players() {
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredPlayers.map(player => (
-            <div
-              key={player.id}
-              className="p-4 rounded-lg border bg-white"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-semibold text-lg">{player.name}</h3>
-                  <p className="text-sm text-gray-600">{player.type}</p>
-                  <p className="text-sm text-gray-600">Base Price: ₹{player.basePrice.toLocaleString()}</p>
-                  <p className="text-sm text-gray-600">Rating: {player.rating}/10</p>
-                </div>
-                <div>
-                  <span className={`px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800`}>
-                    {player.status}
-                  </span>
-                </div>
-              </div>
+        {/* First section: UNSOLD players */}
+        <div className="mb-10">
+          <h2 className="text-xl font-bold mb-4 pb-2 border-b bg-gray-100 px-4 py-2 rounded-md">UNSOLD PLAYERS</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Column 1: Unsold Bowlers */}
+            <div>
+              <h3 className="font-bold text-lg text-center pb-2 border-b">Bowlers</h3>
+              <PlayerTypeSection title="Unsold" players={bowlersUnsold} />
             </div>
-          ))}
+            
+            {/* Column 2: Unsold Batsmen */}
+            <div>
+              <h3 className="font-bold text-lg text-center pb-2 border-b">Batsmen</h3>
+              <PlayerTypeSection title="Unsold" players={batsmenUnsold} />
+            </div>
+            
+            {/* Column 3: Unsold All-rounders */}
+            <div>
+              <h3 className="font-bold text-lg text-center pb-2 border-b">All-rounders</h3>
+              <PlayerTypeSection title="Unsold" players={allRoundersUnsold} />
+            </div>
+          </div>
+        </div>
+        
+        {/* Second section: SOLD players */}
+        <div>
+          <h2 className="text-xl font-bold mb-4 pb-2 border-b bg-green-100 px-4 py-2 rounded-md">SOLD PLAYERS</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Column 1: Sold Bowlers */}
+            <div>
+              <h3 className="font-bold text-lg text-center pb-2 border-b">Bowlers</h3>
+              <PlayerTypeSection title="Sold" players={bowlersSold} />
+            </div>
+            
+            {/* Column 2: Sold Batsmen */}
+            <div>
+              <h3 className="font-bold text-lg text-center pb-2 border-b">Batsmen</h3>
+              <PlayerTypeSection title="Sold" players={batsmenSold} />
+            </div>
+            
+            {/* Column 3: Sold All-rounders */}
+            <div>
+              <h3 className="font-bold text-lg text-center pb-2 border-b">All-rounders</h3>
+              <PlayerTypeSection title="Sold" players={allRoundersSold} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
