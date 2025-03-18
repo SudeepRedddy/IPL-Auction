@@ -21,6 +21,11 @@ export default function Auction() {
   const unsoldPlayers = players.filter(p => p.status === 'unsold');
   const currentPlayer = players.find(p => p.id === selectedPlayer);
 
+  // Organize players by type
+  const bowlers = unsoldPlayers.filter(p => p.type === 'Bowler');
+  const batsmen = unsoldPlayers.filter(p => p.type === 'Batsman');
+  const allRounders = unsoldPlayers.filter(p => p.type === 'All-rounder');
+
   const handleSell = async () => {
     if (!selectedPlayer || !selectedTeam || bidAmount <= 0) {
       setError('Please select a player, team, and enter a valid bid amount');
@@ -63,35 +68,78 @@ export default function Auction() {
     setError(null);
   };
 
+  // Player card component for reuse
+  const PlayerCard = ({ player }) => (
+    <div
+      key={player.id}
+      onClick={() => {
+        setSelectedPlayer(player.id);
+        setBidAmount(player.basePrice);
+        setError(null);
+      }}
+      className={`p-4 rounded-lg border cursor-pointer transition-colors ${
+        selectedPlayer === player.id
+          ? 'border-indigo-500 bg-indigo-50'
+          : 'hover:border-gray-300'
+      }`}
+    >
+      <h3 className="font-semibold">{player.name}</h3>
+      <p className="text-sm text-gray-600">{player.type}</p>
+      <p className="text-sm text-gray-600">Base Price: ₹{player.basePrice.toLocaleString()}</p>
+      <p className="text-sm text-gray-600">Rating: {player.rating}/10</p>
+    </div>
+  );
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4">Available Players</h2>
-        <div className="space-y-4 max-h-[600px] overflow-y-auto">
-          {unsoldPlayers.map(player => (
-            <div
-              key={player.id}
-              onClick={() => {
-                setSelectedPlayer(player.id);
-                setBidAmount(player.basePrice);
-                setError(null);
-              }}
-              className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                selectedPlayer === player.id
-                  ? 'border-indigo-500 bg-indigo-50'
-                  : 'hover:border-gray-300'
-              }`}
-            >
-              <h3 className="font-semibold">{player.name}</h3>
-              <p className="text-sm text-gray-600">{player.type}</p>
-              <p className="text-sm text-gray-600">Base Price: ₹{player.basePrice.toLocaleString()}</p>
-              <p className="text-sm text-gray-600">Rating: {player.rating}/10</p>
+        
+        {/* Players organized in three columns by type */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Column 1: Bowlers */}
+          <div>
+            <h3 className="font-bold text-lg pb-2 mb-2 border-b text-center">Bowlers ({bowlers.length})</h3>
+            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+              {bowlers.map(player => (
+                <PlayerCard key={player.id} player={player} />
+              ))}
+              {bowlers.length === 0 && (
+                <p className="text-gray-500 text-center py-2 text-sm italic">No bowlers available</p>
+              )}
             </div>
-          ))}
-          {unsoldPlayers.length === 0 && (
-            <p className="text-gray-500 text-center py-4">No unsold players available</p>
-          )}
+          </div>
+          
+          {/* Column 2: Batsmen */}
+          <div>
+            <h3 className="font-bold text-lg pb-2 mb-2 border-b text-center">Batsmen ({batsmen.length})</h3>
+            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+              {batsmen.map(player => (
+                <PlayerCard key={player.id} player={player} />
+              ))}
+              {batsmen.length === 0 && (
+                <p className="text-gray-500 text-center py-2 text-sm italic">No batsmen available</p>
+              )}
+            </div>
+          </div>
+          
+          {/* Column 3: All-rounders */}
+          <div>
+            <h3 className="font-bold text-lg pb-2 mb-2 border-b text-center">All-rounders ({allRounders.length})</h3>
+            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+              {allRounders.map(player => (
+                <PlayerCard key={player.id} player={player} />
+              ))}
+              {allRounders.length === 0 && (
+                <p className="text-gray-500 text-center py-2 text-sm italic">No all-rounders available</p>
+              )}
+            </div>
+          </div>
         </div>
+        
+        {unsoldPlayers.length === 0 && (
+          <p className="text-gray-500 text-center py-4 mt-4">No unsold players available</p>
+        )}
       </div>
 
       {selectedPlayer && currentPlayer && (
@@ -122,7 +170,7 @@ export default function Auction() {
                     className="w-full px-4 py-2 border rounded-md text-xl font-semibold"
                     disabled={loading}
                   />
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></span>
                 </div>
               </div>
               
