@@ -8,8 +8,8 @@ interface AuthState {
 }
 
 // Default admin credentials
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'admin123';
+const ADMIN_USERNAME = 'sudeepreddy';
+const ADMIN_PASSWORD = 'rahul';
 
 export const useAuthStore = create<AuthState>()(
   persist(
