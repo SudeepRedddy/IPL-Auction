@@ -75,7 +75,7 @@ export default function Players({ isAdmin }: PlayersProps) {
         <div>
           <span className={`px-2 py-1 text-xs rounded-full ${
             player.status === 'unsold' 
-              ? 'bg-gray-100 text-gray-800' 
+              ? 'bg-yellow-100 text-yellow-800' 
               : 'bg-green-100 text-green-800'
           }`}>
             {player.status}
@@ -173,7 +173,7 @@ export default function Players({ isAdmin }: PlayersProps) {
         </div>
 
         <div className="mb-10">
-          <h2 className="text-xl font-bold mb-4 pb-2 border-b bg-gray-100 px-4 py-2 rounded-md">UNSOLD PLAYERS</h2>
+          <h2 className="text-xl font-bold mb-4 pb-2 border-b bg-yellow-100 px-4 py-2 rounded-md">UNSOLD PLAYERS</h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div>
               <h3 className="font-bold text-lg text-center pb-2 border-b">Bowlers</h3>
