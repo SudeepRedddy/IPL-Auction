@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useAuctionStore } from '../store/auctionStore';
 import { Search, PlusCircle } from 'lucide-react';
 
-export default function Players() {
+interface PlayersProps {
+  isAdmin: boolean;
+}
+
+export default function Players({ isAdmin }: PlayersProps) {
   const { players, addPlayer, loadInitialData } = useAuctionStore();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'Bowler' | 'Batsman' | 'All-rounder'>('all');
@@ -25,16 +29,13 @@ export default function Players() {
     }
   };
 
-  // Filter players based on search and filter criteria
   const filteredPlayers = players.filter(player => {
     const matchesSearch = player.name.toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === 'all' || player.type === filter;
     return matchesSearch && matchesFilter;
   });
 
-  // Organize players by type and status (unsold/sold)
   const organizePlayers = () => {
-    // Group by player type and status
     const bowlersUnsold = filteredPlayers.filter(player => player.type === 'Bowler' && player.status === 'unsold');
     const bowlersSold = filteredPlayers.filter(player => player.type === 'Bowler' && player.status === 'sold');
     
@@ -57,7 +58,6 @@ export default function Players() {
     allRoundersUnsold, allRoundersSold 
   } = organizePlayers();
 
-  // Player card component for reuse
   const PlayerCard = ({ player }) => (
     <div className="p-4 rounded-lg border bg-white">
       <div className="flex justify-between items-start">
@@ -80,7 +80,6 @@ export default function Players() {
     </div>
   );
 
-  // Section component for grouping players by type
   const PlayerTypeSection = ({ title, players }) => (
     <div className="mt-4">
       <h4 className="text-md font-medium mb-2">
@@ -99,51 +98,51 @@ export default function Players() {
 
   return (
     <div className="space-y-6">
-      {/* Add New Player Form */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Add New Player</h2>
-        <form onSubmit={handleSubmit} className="flex gap-4">
-          <input
-            type="text"
-            placeholder="Player Name"
-            value={newPlayer.name}
-            onChange={(e) => setNewPlayer({ ...newPlayer, name: e.target.value })}
-            className="flex-1 px-4 py-2 border rounded-md"
-          />
-          <select
-            value={newPlayer.type}
-            onChange={(e) => setNewPlayer({ ...newPlayer, type: e.target.value as any })}
-            className="w-48 px-4 py-2 border rounded-md"
-          >
-            <option value="Bowler">Bowler</option>
-            <option value="Batsman">Batsman</option>
-            <option value="All-rounder">All-rounder</option>
-          </select>
-          <input
-            type="number"
-            placeholder="Base Price"
-            value={newPlayer.basePrice || ''}
-            onChange={(e) => setNewPlayer({ ...newPlayer, basePrice: Number(e.target.value) })}
-            className="w-48 px-4 py-2 border rounded-md"
-          />
-          <input
-            type="number"
-            placeholder="Rating (1-10)"
-            value={newPlayer.rating || ''}
-            onChange={(e) => setNewPlayer({ ...newPlayer, rating: Number(e.target.value) })}
-            className="w-48 px-4 py-2 border rounded-md"
-          />
-          <button
-            type="submit"
-            className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 flex items-center gap-2"
-          >
-            <PlusCircle className="h-5 w-5" />
-            Add Player
-          </button>
-        </form>
-      </div>
+      {isAdmin && (
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold mb-4">Add New Player</h2>
+          <form onSubmit={handleSubmit} className="flex gap-4">
+            <input
+              type="text"
+              placeholder="Player Name"
+              value={newPlayer.name}
+              onChange={(e) => setNewPlayer({ ...newPlayer, name: e.target.value })}
+              className="flex-1 px-4 py-2 border rounded-md"
+            />
+            <select
+              value={newPlayer.type}
+              onChange={(e) => setNewPlayer({ ...newPlayer, type: e.target.value as any })}
+              className="w-48 px-4 py-2 border rounded-md"
+            >
+              <option value="Bowler">Bowler</option>
+              <option value="Batsman">Batsman</option>
+              <option value="All-rounder">All-rounder</option>
+            </select>
+            <input
+              type="number"
+              placeholder="Base Price"
+              value={newPlayer.basePrice || ''}
+              onChange={(e) => setNewPlayer({ ...newPlayer, basePrice: Number(e.target.value) })}
+              className="w-48 px-4 py-2 border rounded-md"
+            />
+            <input
+              type="number"
+              placeholder="Rating (1-10)"
+              value={newPlayer.rating || ''}
+              onChange={(e) => setNewPlayer({ ...newPlayer, rating: Number(e.target.value) })}
+              className="w-48 px-4 py-2 border rounded-md"
+            />
+            <button
+              type="submit"
+              className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 flex items-center gap-2"
+            >
+              <PlusCircle className="h-5 w-5" />
+              Add Player
+            </button>
+          </form>
+        </div>
+      )}
 
-      {/* Search and Filter */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex gap-4 mb-6">
           <div className="flex-1 relative">
@@ -168,23 +167,19 @@ export default function Players() {
           </select>
         </div>
 
-        {/* First section: UNSOLD players */}
         <div className="mb-10">
           <h2 className="text-xl font-bold mb-4 pb-2 border-b bg-gray-100 px-4 py-2 rounded-md">UNSOLD PLAYERS</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Column 1: Unsold Bowlers */}
             <div>
               <h3 className="font-bold text-lg text-center pb-2 border-b">Bowlers</h3>
               <PlayerTypeSection title="Unsold" players={bowlersUnsold} />
             </div>
             
-            {/* Column 2: Unsold Batsmen */}
             <div>
               <h3 className="font-bold text-lg text-center pb-2 border-b">Batsmen</h3>
               <PlayerTypeSection title="Unsold" players={batsmenUnsold} />
             </div>
             
-            {/* Column 3: Unsold All-rounders */}
             <div>
               <h3 className="font-bold text-lg text-center pb-2 border-b">All-rounders</h3>
               <PlayerTypeSection title="Unsold" players={allRoundersUnsold} />
@@ -192,23 +187,19 @@ export default function Players() {
           </div>
         </div>
         
-        {/* Second section: SOLD players */}
         <div>
           <h2 className="text-xl font-bold mb-4 pb-2 border-b bg-green-100 px-4 py-2 rounded-md">SOLD PLAYERS</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Column 1: Sold Bowlers */}
             <div>
               <h3 className="font-bold text-lg text-center pb-2 border-b">Bowlers</h3>
               <PlayerTypeSection title="Sold" players={bowlersSold} />
             </div>
             
-            {/* Column 2: Sold Batsmen */}
             <div>
               <h3 className="font-bold text-lg text-center pb-2 border-b">Batsmen</h3>
               <PlayerTypeSection title="Sold" players={batsmenSold} />
             </div>
             
-            {/* Column 3: Sold All-rounders */}
             <div>
               <h3 className="font-bold text-lg text-center pb-2 border-b">All-rounders</h3>
               <PlayerTypeSection title="Sold" players={allRoundersSold} />

@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useAuctionStore } from '../store/auctionStore';
-import { PlusCircle, Trash2, Eye } from 'lucide-react';
+import { PlusCircle, Eye } from 'lucide-react';
 
-export default function Teams() {
-  const { teams, addTeam, removeTeam, loadInitialData } = useAuctionStore();
+interface TeamsProps {
+  isAdmin: boolean;
+}
+
+export default function Teams({ isAdmin }: TeamsProps) {
+  const { teams, addTeam, loadInitialData } = useAuctionStore();
   const [newTeam, setNewTeam] = useState({ name: '', purseGiven: 0 });
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
 
-  // Add useEffect to load initial data when component mounts
   useEffect(() => {
     loadInitialData();
   }, [loadInitialData]);
@@ -28,34 +31,37 @@ export default function Teams() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Add New Team</h2>
-        <form onSubmit={handleSubmit} className="flex gap-4">
-          <input
-            type="text"
-            placeholder="Team Name"
-            value={newTeam.name}
-            onChange={(e) => setNewTeam({ ...newTeam, name: e.target.value })}
-            className="flex-1 px-4 py-2 border rounded-md"
-          />
-          <input
-            type="number"
-            placeholder="Purse Amount"
-            value={newTeam.purseGiven || ''}
-            onChange={(e) => setNewTeam({ ...newTeam, purseGiven: Number(e.target.value) })}
-            className="w-48 px-4 py-2 border rounded-md"
-          />
-          <button
-            type="submit"
-            className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 flex items-center gap-2"
-          >
-            <PlusCircle className="h-5 w-5" />
-            Add Team
-          </button>
-        </form>
-      </div>
+      {isAdmin && (
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold mb-4">Add New Team</h2>
+          <form onSubmit={handleSubmit} className="flex gap-4">
+            <input
+              type="text"
+              placeholder="Team Name"
+              value={newTeam.name}
+              onChange={(e) => setNewTeam({ ...newTeam, name: e.target.value })}
+              className="flex-1 px-4 py-2 border rounded-md"
+            />
+            <input
+              type="number"
+              placeholder="Purse Amount"
+              value={newTeam.purseGiven || ''}
+              onChange={(e) => setNewTeam({ ...newTeam, purseGiven: Number(e.target.value) })}
+              className="w-48 px-4 py-2 border rounded-md"
+            />
+            <button
+              type="submit"
+              className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 flex items-center gap-2"
+            >
+              <PlusCircle className="h-5 w-5" />
+              Add Team
+            </button>
+          </form>
+        </div>
+      )}
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <h2 className="text-2xl font-bold p-6 border-b">Team Details</h2>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -64,7 +70,7 @@ export default function Teams() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purse Remaining</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Purchase</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Purchase</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">View Players</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -76,20 +82,12 @@ export default function Teams() {
                 <td className="px-6 py-4 whitespace-nowrap">₹{team.currentPurchase.toLocaleString()}</td>
                 <td className="px-6 py-4 whitespace-nowrap">₹{team.totalPurchase.toLocaleString()}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => setSelectedTeam(selectedTeam === team.id ? null : team.id)}
-                      className="text-indigo-600 hover:text-indigo-900"
-                    >
-                      <Eye className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => removeTeam(team.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => setSelectedTeam(selectedTeam === team.id ? null : team.id)}
+                    className="text-indigo-600 hover:text-indigo-900"
+                  >
+                    <Eye className="h-5 w-5" />
+                  </button>
                 </td>
               </tr>
             ))}
