@@ -65,6 +65,11 @@ export default function Players({ isAdmin }: PlayersProps) {
           <h3 className="font-semibold text-lg">{player.name}</h3>
           <p className="text-sm text-gray-600">{player.type}</p>
           <p className="text-sm text-gray-600">Base Price: ₹{player.basePrice.toLocaleString()}</p>
+          {player.status === 'sold' && player.soldPrice && (
+            <p className="text-sm text-green-600 font-medium">
+              Sold for: ₹{player.soldPrice.toLocaleString()}
+            </p>
+          )}
           <p className="text-sm text-gray-600">Rating: {player.rating}/10</p>
         </div>
         <div>
