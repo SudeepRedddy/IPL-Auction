@@ -104,9 +104,9 @@ export default function Players({ isAdmin }: PlayersProps) {
   return (
     <div className="space-y-6">
       {isAdmin && (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-4">Add New Player</h2>
-          <form onSubmit={handleSubmit} className="flex gap-4">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">Add New Player</h2>
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
             <input
               type="text"
               placeholder="Player Name"
@@ -117,7 +117,7 @@ export default function Players({ isAdmin }: PlayersProps) {
             <select
               value={newPlayer.type}
               onChange={(e) => setNewPlayer({ ...newPlayer, type: e.target.value as any })}
-              className="w-48 px-4 py-2 border rounded-md"
+              className="w-full sm:w-48 px-4 py-2 border rounded-md"
             >
               <option value="Bowler">Bowler</option>
               <option value="Batsman">Batsman</option>
@@ -128,18 +128,18 @@ export default function Players({ isAdmin }: PlayersProps) {
               placeholder="Base Price"
               value={newPlayer.basePrice || ''}
               onChange={(e) => setNewPlayer({ ...newPlayer, basePrice: Number(e.target.value) })}
-              className="w-48 px-4 py-2 border rounded-md"
+              className="w-full sm:w-48 px-4 py-2 border rounded-md"
             />
             <input
               type="number"
               placeholder="Rating (1-10)"
               value={newPlayer.rating || ''}
               onChange={(e) => setNewPlayer({ ...newPlayer, rating: Number(e.target.value) })}
-              className="w-48 px-4 py-2 border rounded-md"
+              className="w-full sm:w-48 px-4 py-2 border rounded-md"
             />
             <button
               type="submit"
-              className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 flex items-center gap-2"
+              className="w-full sm:w-auto bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 flex items-center justify-center gap-2"
             >
               <PlusCircle className="h-5 w-5" />
               Add Player
@@ -148,8 +148,8 @@ export default function Players({ isAdmin }: PlayersProps) {
         </div>
       )}
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="flex gap-4 mb-6">
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <input
@@ -163,7 +163,7 @@ export default function Players({ isAdmin }: PlayersProps) {
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as any)}
-            className="w-48 px-4 py-2 border rounded-md"
+            className="w-full sm:w-48 px-4 py-2 border rounded-md"
           >
             <option value="all">All Types</option>
             <option value="Bowler">Bowlers</option>
@@ -174,7 +174,7 @@ export default function Players({ isAdmin }: PlayersProps) {
 
         <div className="mb-10">
           <h2 className="text-xl font-bold mb-4 pb-2 border-b bg-gray-100 px-4 py-2 rounded-md">UNSOLD PLAYERS</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div>
               <h3 className="font-bold text-lg text-center pb-2 border-b">Bowlers</h3>
               <PlayerTypeSection title="Unsold" players={bowlersUnsold} />
@@ -194,7 +194,7 @@ export default function Players({ isAdmin }: PlayersProps) {
         
         <div>
           <h2 className="text-xl font-bold mb-4 pb-2 border-b bg-green-100 px-4 py-2 rounded-md">SOLD PLAYERS</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div>
               <h3 className="font-bold text-lg text-center pb-2 border-b">Bowlers</h3>
               <PlayerTypeSection title="Sold" players={bowlersSold} />

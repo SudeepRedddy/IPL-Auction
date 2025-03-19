@@ -60,7 +60,7 @@ export default function Leaderboard() {
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <div className="p-3 bg-gradient-to-r from-indigo-700 to-indigo-500 text-white">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
           <div className="flex items-center gap-2">
             <Trophy className="h-6 w-6" />
             <div>
@@ -84,27 +84,26 @@ export default function Leaderboard() {
             }`}
           >
             <div className={`p-2 ${index === 0 ? 'bg-indigo-50' : 'bg-white'}`}>
-              <div className="flex items-center">
-                {/* Rank */}
-                <div className={`flex-none w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${
-                  index === 0 ? 'bg-indigo-400 text-white' :  
-                  'bg-indigo-100 text-indigo-600'
-                }`}>
-                  {index + 1}
-                </div>
-                
-                {/* Team name and rating */}
-                <div className="ml-2 flex-none w-48">
-                  <h3 className="font-bold text-sm">{team.name}</h3>
-                  <div className="flex items-center text-xs text-gray-600">
-                    {/* <Star className="h-3 w-12 text-yellow-500 mr-1" /> */}
-                    <span>Rating: <strong>{team.averageRating.toFixed(1)}</strong></span>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                {/* Rank and Team Name */}
+                <div className="flex items-center gap-2">
+                  <div className={`flex-none w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${
+                    index === 0 ? 'bg-indigo-400 text-white' :  
+                    'bg-indigo-100 text-indigo-600'
+                  }`}>
+                    {index + 1}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm">{team.name}</h3>
+                    <div className="flex items-center text-xs text-gray-600">
+                      <span>Rating: <strong>{team.averageRating.toFixed(1)}</strong></span>
+                    </div>
                   </div>
                 </div>
                 
                 {/* Squad composition */}
-                <div className="flex items-center text-xs mr-4">
-                  <Users className="h-3 w-12 text-indigo-500 mr-1" />
+                <div className="flex items-center text-xs">
+                  <Users className="h-3 w-3 text-indigo-500 mr-1" />
                   <div>
                     <div className="text-gray-500">Squad</div>
                     <div>B:{team.playerTypes.Batsman} • BL:{team.playerTypes.Bowler} • AR:{team.playerTypes.AllRounder}</div>
@@ -112,8 +111,8 @@ export default function Leaderboard() {
                 </div>
                 
                 {/* Star player */}
-                <div className="flex items-center text-xs mr-4">
-                  <Award className="h-3 w-12 text-indigo-500 mr-1" />
+                <div className="flex items-center text-xs">
+                  <Award className="h-3 w-3 text-indigo-500 mr-1" />
                   <div>
                     <div className="text-gray-500">Star Player</div>
                     <div className="truncate max-w-32">
@@ -127,8 +126,8 @@ export default function Leaderboard() {
                 </div>
                 
                 {/* Highest purchase */}
-                <div className="flex items-center text-xs mr-4">
-                  <DollarSign className="h-3 w-15 text-indigo-500 mr-1" />
+                <div className="flex items-center text-xs">
+                  <DollarSign className="h-3 w-3 text-indigo-500 mr-1" />
                   <div>
                     <div className="text-gray-500">Top Buy</div>
                     <div className="truncate max-w-32">

@@ -91,9 +91,9 @@ export default function Auction() {
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Available Players</h2>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4">Available Players</h2>
         
         {/* Players organized in three columns by type */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -143,8 +143,8 @@ export default function Auction() {
       </div>
 
       {selectedPlayer && currentPlayer && (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-4">Auction Control</h2>
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">Auction Control</h2>
           <div className="space-y-6">
             <div className="bg-indigo-50 p-4 rounded-lg">
               <h3 className="text-lg font-semibold text-indigo-700">{currentPlayer.name}</h3>
@@ -155,7 +155,7 @@ export default function Auction() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Current Bid</label>
                 <div className="relative">
@@ -170,18 +170,17 @@ export default function Auction() {
                     className="w-full px-4 py-2 border rounded-md text-xl font-semibold"
                     disabled={loading}
                   />
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></span>
                 </div>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Bid Increment</label>
-                <div className="flex space-x-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {quickIncrements.map(increment => (
                     <button
                       key={increment}
                       onClick={() => handleIncreaseBid(increment)}
-                      className="flex-1 bg-gray-100 px-2 py-2 rounded-md hover:bg-gray-200 transition-colors"
+                      className="bg-gray-100 px-2 py-2 rounded-md hover:bg-gray-200 transition-colors text-sm"
                     >
                       +{(increment / 100000).toFixed(increment % 100000 === 0 ? 0 : 1)}L
                     </button>
@@ -223,11 +222,12 @@ export default function Auction() {
               </div>
             )}
 
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={() => handleIncreaseBid(bidIncrement)}
                 disabled={loading}
-                className="flex-1 bg-indigo-100 text-indigo-800 px-6 py-3 rounded-md hover:bg-indigo-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                className="flex-1 bg-indigo-100 text-indigo-800 px-6 py-3 rounde
+d-md hover:bg-indigo-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               >
                 <ChevronUp className="h-5 w-5" />
                 Increase Bid
