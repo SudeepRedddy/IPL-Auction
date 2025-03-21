@@ -7,6 +7,7 @@ interface AuctionStore {
   players: Player[];
   addTeam: (team: Omit<Team, 'id' | 'players' | 'totalRating'>) => Promise<void>;
   addPlayer: (player: Omit<Player, 'id' | 'status' | 'teamId'>) => Promise<void>;
+  addPlayers: (players: Omit<Player, 'id' | 'status' | 'teamId'>[]) => Promise<void>;
   assignPlayerToTeam: (playerId: string, teamId: string, soldPrice: number) => Promise<void>;
   loadInitialData: () => Promise<void>;
   removeTeam: (teamId: string) => Promise<void>;
@@ -136,6 +137,42 @@ export const useAuctionStore = create<AuctionStore>((set, get) => ({
     }
   },
 
+  addPlayers: async (players) => {
+    try {
+      const { data, error } = await supabase
+        .from('players')
+        .insert(
+          players.map(player => ({
+            name: player.name,
+            type: player.type,
+            base_price: player.basePrice,
+            status: 'unsold',
+            rating: player.rating
+          }))
+        )
+        .select();
+
+      if (error) throw error;
+
+      if (data) {
+        const newPlayers: Player[] = data.map(player => ({
+          id: player.id,
+          name: player.name,
+          type: player.type as 'Bowler' | 'Batsman' | 'All-rounder' | 'Wicketkeeper',
+          basePrice: player.base_price,
+          status: 'unsold',
+          rating: player.rating
+        }));
+
+        set((state) => ({
+          players: [...state.players, ...newPlayers]
+        }));
+      }
+    } catch (error) {
+      console.error('Error adding players:', error);
+    }
+  },
+
   assignPlayerToTeam: async (playerId, teamId, soldPrice) => {
     try {
       const { data: team, error: teamError } = await supabase.from('teams').select('*').eq('id', teamId).single();
@@ -159,7 +196,6 @@ export const useAuctionStore = create<AuctionStore>((set, get) => ({
 
       // Calculate updated team values
       const updatedPurseRemaining = team.purse_remaining - soldPrice;
-      // Add to current purchase instead of replacing it
       const updatedCurrentPurchase = team.current_purchase + soldPrice;
       const updatedTotalPurchase = team.total_purchase + soldPrice;
       const updatedTotalRating = team.total_rating + player.rating;
