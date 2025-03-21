@@ -185,7 +185,7 @@ export default function Players({ isAdmin }: PlayersProps) {
               />
               <input
                 type="number"
-                placeholder="Rating (1-10)"
+                placeholder="Rating (1-100)"
                 value={newPlayer.rating || ''}
                 onChange={(e) => setNewPlayer({ ...newPlayer, rating: Number(e.target.value) })}
                 className="w-full sm:w-48 px-4 py-2 border rounded-md"
