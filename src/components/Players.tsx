@@ -122,7 +122,7 @@ export default function Players({ isAdmin }: PlayersProps) {
               Sold for: ₹{player.soldPrice.toLocaleString()}
             </p>
           )}
-          <p className="text-sm text-gray-600">Rating: {player.rating}/10</p>
+          <p className="text-sm text-gray-600">Rating: {player.rating}/100</p>
         </div>
         <div>
           <span className={`px-2 py-1 text-xs rounded-full ${
