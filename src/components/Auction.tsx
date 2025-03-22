@@ -12,7 +12,7 @@ export default function Auction() {
   const [bidIncrement, setBidIncrement] = useState<number>(100000); // Default increment: 1 Lakh
 
   // Common bid increments
-  const quickIncrements = [50000, 100000, 500000, 1000000];
+  const quickIncrements = [500000, 1000000, 2500000, 10000000];
 
   useEffect(() => {
     loadInitialData();
